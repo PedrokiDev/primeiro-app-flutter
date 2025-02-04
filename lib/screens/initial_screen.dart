@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nosso_primeiro_projeto/components/task.dart';
+import 'package:nosso_primeiro_projeto/data/task_inherited.dart';
+
+import 'form_screen.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
@@ -9,8 +11,6 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
-  bool opacidade = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,37 +19,18 @@ class _InitialScreenState extends State<InitialScreen> {
         backgroundColor: Color(0xFF2f80ed),
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 24),
       ),
-      body: AnimatedOpacity(
-        opacity: opacidade ? 1 : 0,
-        duration: Duration(milliseconds: 300),
-        child: ListView(
-          children: [
-            Task(
-                'Aprender Flutter',
-                'assets/images/flutter.png',
-                3),
-            Task(
-                'Andar de bicicleta',
-                'assets/images/bicicleta.webp',
-                2),
-            Task(
-                'Meditar',
-                'assets/images/meditar.jpg',
-                5),
-            Task(
-                'Aprender japonês com o aplicativo duolingo',
-                'assets/images/japones.jpg',
-                4),
-          ],
-        ),
+      body: ListView(
+        padding: EdgeInsets.only(top: 8, bottom: 100),
+        children: TaskInherited.of(context).taskList,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            opacidade = !opacidade;
-          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (contextNew) => FormScreen(taskContext: context,)),
+          );
         },
-        child: Icon(Icons.remove_red_eye),
+        child: Icon(Icons.add),
       ),
     );
   }

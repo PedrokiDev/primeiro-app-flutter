@@ -7,14 +7,22 @@ class Task extends StatefulWidget {
   final String photo;
   final int level;
 
-  const Task(this.name, this.photo, this.level, {super.key});
+  Task(this.name, this.photo, this.level, {super.key});
+
+  int nivel = 0;
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0;
+
+  bool assetOrNetwork() {
+    if (widget.photo.contains('http')) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +48,16 @@ class _TaskState extends State<Task> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey[200],
-                      ),
-                      width: 72,
-                      child: ClipRRect(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          child:
-                              Image.asset(widget.photo, fit: BoxFit.cover)),
-                    ),
+                          color: Colors.grey[200],
+                        ),
+                        width: 72,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: assetOrNetwork()
+                                ? Image.asset(widget.photo, fit: BoxFit.cover)
+                                : Image.network(widget.photo, fit: BoxFit.cover))),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,10 +80,10 @@ class _TaskState extends State<Task> {
                         ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                nivel++;
+                                widget.nivel++;
                               });
                               if (kDebugMode) {
-                                print(nivel);
+                                print(widget.nivel);
                               }
                             },
                             child: Icon(Icons.arrow_drop_up)),
@@ -94,7 +102,7 @@ class _TaskState extends State<Task> {
                       child: LinearProgressIndicator(
                         color: Colors.black,
                         value: (widget.level > 0)
-                            ? (nivel / widget.level) / 10
+                            ? (widget.nivel / widget.level) / 10
                             : 1,
                       ),
                     ),
@@ -102,7 +110,7 @@ class _TaskState extends State<Task> {
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(
-                      'Nível $nivel',
+                      'Nível ${widget.nivel}',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
