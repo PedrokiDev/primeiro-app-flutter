@@ -1,16 +1,7 @@
-# nosso_primeiro_projeto
+# App de tarefas
 
-Nosso primeiro projeto em Flutter
+App feito nas aulas da alura sobre flutter. 
 
-## Getting Started
+# Como esta o projeto
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Image](https://github.com/user-attachments/assets/fead008e-8f41-46b9-af97-d27838579d4f)
