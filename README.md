@@ -4,4 +4,4 @@ App feito nas aulas da alura sobre flutter.
 
 # Como esta o projeto
 
-![Image](https://github.com/user-attachments/assets/fead008e-8f41-46b9-af97-d27838579d4f)
+![Image](https://github.com/user-attachments/assets/18bc6675-8524-48e2-9234-7eb2c9c1b40e)
