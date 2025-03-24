@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nosso_primeiro_projeto/data/task_inherited.dart';
+import 'package:nosso_primeiro_projeto/data/task_dao.dart';
+
+import '../components/task.dart';
 
 class FormScreen extends StatefulWidget {
   const FormScreen({super.key, required this.taskContext});
@@ -26,10 +28,10 @@ class _FormScreenState extends State<FormScreen> {
   }
 
   bool difficultValidator(String? value) {
-    if (value != null && value.isEmpty) {
-      if (int.parse(value) > 5 || int.parse(value) < 1) {
-        return true;
-      }
+    if (value == null || value.isEmpty) return true;
+    int? difficulty = int.tryParse(value);
+    if (difficulty == null || difficulty < 1 || difficulty > 5) {
+      return true;
     }
     return false;
   }
@@ -153,21 +155,21 @@ class _FormScreenState extends State<FormScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                              errorBuilder: (BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace) =>
-                                  Image.asset('assets/images/noPhoto.png'),
-                              imageController.text,
-                              fit: BoxFit.cover),
+                            imageController.text,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset('assets/images/noPhoto.png');
+                            },
+                          ),
                         )),
                     SizedBox(height: 20),
                     ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            TaskInherited.of(widget.taskContext).newTask(
+                            await TaskDao().save(Task(
                                 nameController.text,
                                 imageController.text,
-                                int.parse(difficultyController.text));
+                                int.parse(difficultyController.text)));
                             ScaffoldMessenger.of(widget.taskContext)
                                 .showSnackBar(
                               const SnackBar(

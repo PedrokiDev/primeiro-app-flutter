@@ -1,13 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nosso_primeiro_projeto/components/difficulty.dart';
+import 'package:nosso_primeiro_projeto/data/task_dao.dart';
 
 class Task extends StatefulWidget {
   final String name;
-  final String photo;
-  final int level;
+  final int difficulty;
+  final String image;
+  final VoidCallback? onDelete;
 
-  Task(this.name, this.photo, this.level, {super.key});
+  Task(this.name, this.image, this.difficulty, {this.onDelete});
 
   int nivel = 0;
 
@@ -16,9 +18,8 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-
   bool assetOrNetwork() {
-    if (widget.photo.contains('http')) {
+    if (widget.image.contains('http')) {
       return false;
     }
     return true;
@@ -56,8 +57,23 @@ class _TaskState extends State<Task> {
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: assetOrNetwork()
-                                ? Image.asset(widget.photo, fit: BoxFit.cover)
-                                : Image.network(widget.photo, fit: BoxFit.cover))),
+                                ? Image.asset(widget.image, fit: BoxFit.cover)
+                                : Image.network(
+                                    widget.image,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      print('Erro ao carregar imagem: $error');
+                                      return Icon(Icons.error,
+                                          color: Colors
+                                              .red); // Mostra um ícone de erro
+                                    },
+                                  ))),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,6 +94,36 @@ class _TaskState extends State<Task> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
+                            onLongPress: () async {
+                              print('onLongPress disparado');
+                              bool? confirmDelete = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Confirmação'),
+                                      content: Text(
+                                          'Tem certeza de que deseja deletar a tarefa "${widget.name}"?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                          child: Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: Text('Deletar'),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                              if (confirmDelete == true) {
+                                await TaskDao().delete(widget.name);
+                                widget.onDelete?.call();
+                              }
+                            },
                             onPressed: () {
                               setState(() {
                                 widget.nivel++;
@@ -101,8 +147,8 @@ class _TaskState extends State<Task> {
                       width: 200,
                       child: LinearProgressIndicator(
                         color: Colors.black,
-                        value: (widget.level > 0)
-                            ? (widget.nivel / widget.level) / 10
+                        value: (widget.difficulty > 0)
+                            ? (widget.nivel / widget.difficulty) / 10
                             : 1,
                       ),
                     ),

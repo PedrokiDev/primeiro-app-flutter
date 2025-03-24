@@ -1,0 +1,2 @@
+C:/Users/cenor/AndroidStudioProjects/nosso_primeiro_projeto/android/app/.cxx/Debug/272d3g1c/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/cenor/AndroidStudioProjects/nosso_primeiro_projeto/android/app/.cxx/Debug/272d3g1c/x86_64/CMakeFiles/rebuild_cache.dir
